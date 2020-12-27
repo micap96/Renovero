@@ -22,3 +22,14 @@ console.log("here we go");
  * 
  */
 
+function getData() {
+    fetch('lorem.html')
+        .then(data => data.text())
+        .then(
+            html => {
+                document.querySelector('.container').innerHTML = html;
+            }
+        );
+}
+
+getData();
