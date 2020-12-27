@@ -22,11 +22,38 @@ console.log("here we go");
  * 
  */
 
+function getClassName(char) {
+    switch (char.toLowerCase()) {
+        case 'o':
+            return 'my-blue';
+        case 'r':
+            return 'my-orange';
+        default:
+            return '';
+    }
+}
+
+function getText(match) {
+    if (!!match) {
+        const className = getClassName(match);
+
+        return `<span class='${className}'>${match}</span>`;
+    }
+
+    return '';
+}
+
+function highlightChars(html) {
+    return html.replace(/o/gi, getText).replace(/r/gi, getText);
+}
+
 function getData() {
     fetch('lorem.html')
         .then(data => data.text())
         .then(
             html => {
+                html = highlightChars(html);
+
                 document.querySelector('.container').innerHTML = html;
             }
         );
