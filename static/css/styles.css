@@ -5,16 +5,15 @@ my orange: 249,180,21
 
 .my-blue {
     background-color: rgb(32, 55, 104);
-    color: #ffffff;
-    padding: 5px;
-    margin: 0 1px;
-    font-size: 130%;
 }
 
 .my-orange {
     background-color: rgb(249, 180, 21);
+}
+
+.highlight-text {
     color: #ffffff;
-    padding: 5px;
-    margin: 0 1px;
+    padding: 0 5px;
+    margin: 0 0.5px;
     font-size: 130%;
 }

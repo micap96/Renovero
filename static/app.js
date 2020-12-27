@@ -22,7 +22,22 @@ console.log("here we go");
  * 
  */
 
-function getClassName(char) {
+(function () {
+    fetch('lorem.html')
+        .then(data => data.text())
+        .then(
+            text => {
+                if (!!text) {
+                    const newParagraphText = getModifiedParagraphText(text);
+                    const finalText = getHighlightText(newParagraphText);
+
+                    document.querySelector('.container').innerHTML = finalText;
+                }
+            }
+        );
+}());
+
+const getClassName = char => {
     switch (char.toLowerCase()) {
         case 'o':
             return 'my-blue';
@@ -33,46 +48,27 @@ function getClassName(char) {
     }
 }
 
-function getText(match) {
-    if (!!match) {
-        const className = getClassName(match);
+const getStylizedChars = matchText => {
+    const className = getClassName(matchText);
 
-        return `<span class='${className}'>${match}</span>`;
-    }
-
-    return '';
+    return !!matchText ? `<span class='highlight-text ${className}'>${matchText}</span>` : '';
 }
 
-function highlightChars(html) {
-    return html.replace(/o/gi, getText).replace(/r/gi, getText);
+const getHighlightText = text => {
+    return text.replace(new RegExp('o|r','gi'), getStylizedChars);
 }
 
-function cleanAndSortText(match) {
-    if (!!match) {
+const getCleanAndSortedText = matchText => {
+    if (!!matchText) {
         // Remove punctuation
-        match = match.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
+        matchText = matchText.replace(new RegExp('[.,\\/#!$%\\^&\\*;:{}=\\-_`~()?]', 'g'), "");
         // Sort alphabetically
-        match = match.split(' ').sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).join(' ');
+        matchText = matchText.split(' ').sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).join(' ');
     }
 
-    return match;
+    return matchText;
 }
 
-function modifyTextOfParagraph(html) {
-    return html.replace(/(?<=<p>).*(?=<\/p>)/g, cleanAndSortText);
+const getModifiedParagraphText = text => {
+    return text.replace(new RegExp('(?<=<p>).*?(?=<\/p>)', 'g'), getCleanAndSortedText);
 }
-
-function getData() {
-    fetch('lorem.html')
-        .then(data => data.text())
-        .then(
-            html => {
-                html = modifyTextOfParagraph(html);
-                html = highlightChars(html);
-
-                document.querySelector('.container').innerHTML = html;
-            }
-        );
-}
-
-getData();
