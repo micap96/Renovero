@@ -47,11 +47,27 @@ function highlightChars(html) {
     return html.replace(/o/gi, getText).replace(/r/gi, getText);
 }
 
+function cleanAndSortText(match) {
+    if (!!match) {
+        // Remove punctuation
+        match = match.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
+        // Sort alphabetically
+        match = match.split(' ').sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).join(' ');
+    }
+
+    return match;
+}
+
+function modifyTextOfParagraph(html) {
+    return html.replace(/(?<=<p>).*(?=<\/p>)/g, cleanAndSortText);
+}
+
 function getData() {
     fetch('lorem.html')
         .then(data => data.text())
         .then(
             html => {
+                html = modifyTextOfParagraph(html);
                 html = highlightChars(html);
 
                 document.querySelector('.container').innerHTML = html;
